@@ -19,7 +19,7 @@
  */
 
 #ifndef FLASH_APP_ADDR
-#define FLASH_APP_ADDR 0x00100000
+#define FLASH_APP_ADDR 0x00020000
 #endif
 
 	.section .text.start
