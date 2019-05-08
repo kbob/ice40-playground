@@ -29,6 +29,15 @@ SOURCES_common=\
 	usb_ctrl_std.c \
 	utils.c
 
+HEADERS_dfu=\
+	usb_dfu.h \
+	usb_str_dfu.gen.h
+
+SOURCES_dfu=\
+	fw_dfu.c \
+	usb_dfu.c \
+	usb_desc_dfu.c
+
 HEADERS_app=\
 	usb_str_app.gen.h
 
@@ -37,14 +46,20 @@ SOURCES_app=\
 	usb_desc_app.c
 
 
-all: multiboot.bin boot_app.hex fw_app.bin
+all: multiboot.bin boot_dfu.hex boot_app.hex fw_dfu.bin fw_app.bin
 
 
 multiboot.bin: ./mkmultiboot.py
 	./mkmultiboot.py $@
 
+boot_dfu.elf: lnk-boot.lds boot.S
+	$(CC) $(CFLAGS) -Wl,-Bstatic,-T,lnk-boot.lds,--strip-debug -DFLASH_APP_ADDR=0x00020000 -o $@ boot.S
+
 boot_app.elf: lnk-boot.lds boot.S
 	$(CC) $(CFLAGS) -Wl,-Bstatic,-T,lnk-boot.lds,--strip-debug -DFLASH_APP_ADDR=0x00060000 -o $@ boot.S
+
+fw_dfu.elf: lnk-app.lds $(HEADERS_dfu) $(SOURCES_dfu) $(SOURCES_common)
+	$(CC) $(CFLAGS) -Wl,-Bstatic,-T,lnk-app.lds,--strip-debug -o $@ $(SOURCES_common) $(SOURCES_dfu)
 
 fw_app.elf: lnk-app.lds $(HEADERS_app) $(SOURCES_app) $(SOURCES_common)
 	$(CC) $(CFLAGS) -Wl,-Bstatic,-T,lnk-app.lds,--strip-debug -o $@ $(SOURCES_common) $(SOURCES_app)
@@ -60,6 +75,9 @@ usb_str_%.gen.h: usb_str_%.txt
 	./usb_gen_strings.py $< $@
 
 
+prog_dfu: fw_dfu.bin
+	$(ICEPROG) -o 128k $<
+
 prog_app: fw_app.bin
 	$(ICEPROG) -o 128k $<
 
@@ -67,4 +85,4 @@ prog_app: fw_app.bin
 clean:
 	rm -f *.bin *.hex *.elf *.o *.gen.h
 
-.PHONY: prog_app clean
+.PHONY: prog_dfu prog_app clean
