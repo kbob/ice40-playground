@@ -37,8 +37,11 @@ SOURCES_app=\
 	usb_desc_app.c
 
 
-all: boot_app.hex fw_app.bin
+all: multiboot.bin boot_app.hex fw_app.bin
 
+
+multiboot.bin: ./mkmultiboot.py
+	./mkmultiboot.py $@
 
 boot_app.elf: lnk-boot.lds boot.S
 	$(CC) $(CFLAGS) -Wl,-Bstatic,-T,lnk-boot.lds,--strip-debug -DFLASH_APP_ADDR=0x00060000 -o $@ boot.S
