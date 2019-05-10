@@ -79,7 +79,7 @@ prog_dfu: fw_dfu.bin
 	$(ICEPROG) -o 128k $<
 
 prog_app: fw_app.bin
-	$(ICEPROG) -o 128k $<
+	$(ICEPROG) -o 384k $<
 
 
 clean:
