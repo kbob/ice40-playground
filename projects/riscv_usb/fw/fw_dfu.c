@@ -57,6 +57,13 @@ serial_no_init()
 		desc[2 + (i << 1)] = id[i];
 }
 
+static void
+boot_app(void)
+{
+	volatile uint32_t *boot = (void*)0x80000000;
+	*boot = (1 << 2) | (1 << 0);
+}
+
 void main()
 {
 	int cmd = 0;
@@ -79,6 +86,7 @@ void main()
 	serial_no_init();
 	usb_init(&dfu_stack_desc);
 	usb_dfu_init();
+	usb_connect();
 
 	/* Main loop */
 	while (1)
@@ -107,6 +115,9 @@ void main()
 				break;
 			case 'd':
 				usb_disconnect();
+				break;
+			case 'b':
+				boot_app();
 				break;
 			default:
 				break;
