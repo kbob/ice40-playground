@@ -61,6 +61,7 @@ module hub75_top #(
 		// Frame buffer swap
 	input  wire frame_swap,
 	output wire frame_rdy,
+	input  wire fb_loaded,
 
 	// Config
 	input  wire [7:0] cfg_pre_latch_len,
@@ -130,7 +131,7 @@ module hub75_top #(
 			frame_swap_pending <= (frame_swap_pending & ~scan_rdy) | frame_swap;
 
 	assign frame_rdy = ~frame_swap_pending;
-	assign scan_go = scan_rdy & ~frame_swap_pending;
+	assign scan_go = scan_rdy & ~frame_swap_pending & fb_loaded;
 	assign frame_swap_fb = frame_swap_pending & scan_rdy;
 
 	// The signal direction usage legend to the right of the modules has the

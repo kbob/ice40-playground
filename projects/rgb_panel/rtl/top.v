@@ -106,6 +106,13 @@ module top (
 
 	wire frame_swap;
 	wire frame_rdy;
+	reg  fb_loaded;
+
+	always @(posedge clk or posedge rst)
+		if (rst)
+			fb_loaded <= 0;
+		else if (frame_swap)
+			fb_loaded <= 1;
 
 
 	// Hub75 driver
@@ -134,6 +141,7 @@ module top (
 		.fbw_wren(fbw_wren),
 		.frame_swap(frame_swap),
 		.frame_rdy(frame_rdy),
+		.fb_loaded(fb_loaded),
 		.cfg_pre_latch_len(8'h80),
 		.cfg_latch_len(8'h80),
 		.cfg_post_latch_len(8'h80),
