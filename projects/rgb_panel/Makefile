@@ -18,7 +18,7 @@ BOARD ?= icebreaker
 DEVICE = up5k
 PACKAGE = sg48
 
-NEXTPNR_ARGS = --freq 35
+NEXTPNR_ARGS = --freq 30
 
 # Include default rules
 include ../../build/project-rules.mk
@@ -38,4 +38,3 @@ $(BUILD_TMP)/$(PROJ)-video.bin: $(BUILD_TMP)/$(PROJ).bin data/nyan_glitch_64x64x
 
 data-prog: $(BUILD_TMP)/$(PROJ)-video.bin
 	$(ICEPROG) $<
-

@@ -71,7 +71,7 @@ module top (
 	// Params
 	localparam integer N_BANKS  = 2;
 	localparam integer N_ROWS   = 32;
-	localparam integer N_COLS   = 64;
+	localparam integer N_COLS   = 64 * 6;
 	localparam integer N_CHANS  = 3;
 	localparam integer N_PLANES = 10;
 	localparam integer BITDEPTH = 16;
@@ -137,7 +137,9 @@ module top (
 		.cfg_pre_latch_len(8'h80),
 		.cfg_latch_len(8'h80),
 		.cfg_post_latch_len(8'h80),
-		.cfg_bcm_bit_len(8'h06),
+		// 11 -> 63.1fps
+		// 12 -> 59.1fps
+		.cfg_bcm_bit_len(8'd12),
 		.clk(clk),
 		.rst(rst)
 	);
