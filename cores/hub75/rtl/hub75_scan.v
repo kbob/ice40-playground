@@ -121,11 +121,13 @@ module hub75_scan #(
 	// -------------------
 
 	// BCM
-	assign bcm_row = row;
+	// assign bcm_row = row;
+	assign bcm_row = { 1'b0, row[4:1] } ^ ( row[0] ? 5'h1f : 5'h00 );
 	assign bcm_go  = (fsm_state == ST_PAINT);
 
 	// Frame Buffer pre loader
-	assign fb_row_addr = row;
+	// assign fb_row_addr = row;
+	assign fb_row_addr = { 1'b0, row[4:1] } ^ ( row[0] ? 5'h1f : 5'h00 );
 	assign fb_row_load = (fsm_state == ST_LOAD);
 	assign fb_row_swap = (fsm_state == ST_PAINT);
 
