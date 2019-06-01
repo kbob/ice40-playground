@@ -26,22 +26,68 @@
 #include <string.h>
 
 #include "console.h"
+#include "led.h"
+#include "mini-printf.h"
+#include "spi.h"
 #include "usb.h"
 
+
+static char *
+hexstr(void *d, int n)
+{
+	static const char * const hex = "0123456789abcdef";
+	static char buf[96];
+	uint8_t *p = d;
+	char *s = buf;
+	char c;
+
+	while (n--) {
+		c = *p++;
+		*s++ = hex[c >> 4];
+		*s++ = hex[c & 0xf];
+		*s++ = ' ';
+	}
+
+	s[-1] = '\0';
+
+	return buf;
+}
 
 void main()
 {
 	bool usb_active = false;
+	uint8_t buf[8];
+	int cmd = 0;
 
 	/* Init console IO */
 	console_init();
 	puts("Booting..\n");
-	puts("Command> ");
 
+	/* LED */
+	led_init();
+	led_color(48, 96, 5);
+	led_blink(true, 200, 1000);
+	led_breathe(true, 100, 200);
+	led_state(true);
+
+	/* SPI */
+	spi_init();
+
+	flash_manuf_id(buf);
+	puts("Flash Manuf ID  : "); puts(hexstr(buf, 3)); puts("\n");
+
+	flash_unique_id(buf);
+	puts("Flash Unique ID : "); puts(hexstr(buf, 8)); puts("\n");
+
+	/* Main loop */
 	while (1)
 	{
+		/* Prompt ? */
+		if (cmd >= 0)
+			puts("\nCommand> ");
+
 		/* Poll for command */
-		int cmd = getchar_nowait();
+		cmd = getchar_nowait();
 
 		if (cmd >= 0) {
 			if (cmd > 32 && cmd < 127)
@@ -59,8 +105,6 @@ void main()
 			default:
 				break;
 			}
-
-			puts("\nCommand> ");
 		}
 
 		/* USB poll */

@@ -1,14 +1,17 @@
+BOARD ?= icebreaker
 CROSS = riscv-none-embed-
 CC = $(CROSS)gcc
 OBJCOPY = $(CROSS)objcopy
 ICEPROG = iceprog
 
-CFLAGS=-Wall -Os -march=rv32i -mabi=ilp32 -ffreestanding -flto -nostartfiles -fomit-frame-pointer -Wl,--gc-section
+CFLAGS=-Wall -Os -march=rv32i -mabi=ilp32 -ffreestanding -flto -nostartfiles -fomit-frame-pointer -Wl,--gc-section -DBOARD_$(BOARD)
 
 HEADERS=\
 	config.h \
 	console.h \
+	led.h \
 	mini-printf.h \
+	spi.h \
 	usb_priv.h \
 	usb_desc_data.h
 
@@ -16,7 +19,9 @@ SOURCES=\
 	start.S \
 	console.c \
 	firmware.c \
+	led.c \
 	mini-printf.c  \
+	spi.c \
 	usb.c \
 	usb_ep0.c \
 	usb_desc.c

@@ -150,7 +150,7 @@ mc = [
 		EVT_CLR(EVT_ALL),
 		JEQ('IDLE', 0, EVT_RX_OK),
 
-		# Dispatch do handler
+		# Dispatch to handler
 		LD('pkt_pid'),
 		JEQ('DO_IN', PID_IN),
 		JEQ('DO_OUT', PID_OUT),
@@ -294,7 +294,7 @@ mc = [
 
 		# Check we have space, if not prevent data writes
 		LD('bd_state'),
-		JEQ('_DO_OUT_BCI_DROP_DATA', BD_RDY_DATA),
+		JNE('_DO_OUT_BCI_DROP_DATA', BD_RDY_DATA),
 
 		# Wait for packet
 		EVT_RTO(TIMEOUT),

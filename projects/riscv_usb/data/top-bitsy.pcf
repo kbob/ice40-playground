@@ -6,13 +6,13 @@ set_io -nowarn spi_flash_cs_n 16
 set_io -nowarn spi_ram_cs_n 37
 
 # USB
-set_io -nowarn usb_dp 31
-set_io -nowarn usb_dn 34
+set_io -nowarn usb_dp 43
+set_io -nowarn usb_dn 42
 set_io -nowarn usb_pu 38
 
 # UART
-set_io -nowarn uart_rx 6
-set_io -nowarn uart_tx 9
+set_io -nowarn uart_rx 18
+set_io -nowarn uart_tx 19
 
 # Clock
 set_io -nowarn clk_in 35
