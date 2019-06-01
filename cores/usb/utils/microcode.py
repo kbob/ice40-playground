@@ -164,8 +164,8 @@ mc = [
 	L('DO_IN'),
 		# Check endpoint type
 		LD('ep_type'),
-		JMP('DO_IN_ISOC', EP_TYPE_ISOC, EP_TYPE_MSK1),	# isochronous is special
-		JMP('IDLE', EP_TYPE_NONE, EP_TYPE_MSK1),		# endpoint doesn't exist, ignore packet
+		JEQ('DO_IN_ISOC', EP_TYPE_ISOC, EP_TYPE_MSK1),	# isochronous is special
+		JEQ('IDLE', EP_TYPE_NONE, EP_TYPE_MSK1),		# endpoint doesn't exist, ignore packet
 
 
 		# Bulk/Control/Interrupt
@@ -224,6 +224,12 @@ mc = [
 
 		# Transmit packet (with DATA0, always)
 		TX(PID_DATA0),
+
+		# Wait for TX to complete
+	L('_DO_IN_ISOC_WAIT_TX'),
+		LD('evt'),
+		JEQ('_DO_IN_ISOC_WAIT_TX', 0, EVT_TX_DONE),
+		EVT_CLR(EVT_TX_DONE),
 
 		# "Assume" success
 		EP(bd_state=BD_DONE_OK, bdi_flip=True, dt_flip=False, wb=True),
