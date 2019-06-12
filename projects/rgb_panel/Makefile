@@ -19,7 +19,7 @@ BOARD ?= icebreaker
 DEVICE = up5k
 PACKAGE = sg48
 
-NEXTPNR_ARGS = --freq 30
+NEXTPNR_ARGS = --freq 12
 
 # Include default rules
 include ../../build/project-rules.mk
